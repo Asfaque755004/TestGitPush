@@ -17,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class LoginController  {
 	
@@ -37,6 +38,9 @@ public class LoginController  {
 
     @FXML
     private TextField login_username;
+    
+    private double x;
+    private double y;
 
     public void close() {
     	System.exit(0);
@@ -61,25 +65,15 @@ public class LoginController  {
 		String uname=login_username.getText();
 		String upwd=login_password.getText();
 		
-		Alert alert;
-		
 		//checking if login form fields are empty
 		if(uname.isEmpty() || upwd.isEmpty()) {
 			
-			alert=new Alert(AlertType.ERROR);
-			alert.setTitle("Error Message");
-			alert.setHeaderText(null);
-			alert.setContentText("Username or Password is not filled.Please enter both");
-			alert.showAndWait();
+			showAlert(AlertType.ERROR, "Error Message", "Username or Password is not filled.Please enter both");
 			
 		}else if (DBConnection.checkAuthentication(uname, upwd)) {
 			
 			//Authentication is successful, show the dashboard to the admin user
-			alert=new Alert(AlertType.INFORMATION);
-			alert.setTitle("Information Message");
-			alert.setHeaderText(null);
-			alert.setContentText("Successfully Loggedin!");
-			alert.showAndWait();
+			showAlert(AlertType.INFORMATION, "Information Message", "Successfully Loggedin!");
 			
 			//To hide the login form
 			login_btn.getScene().getWindow().hide();
@@ -89,6 +83,26 @@ public class LoginController  {
 				Parent root=FXMLLoader.load(getClass().getResource("/com/desktop/MoSchoolApp/dashboard/Dashboard.fxml"));
 				
 				Stage stage=new Stage();
+				
+				root.setOnMousePressed( event ->{
+					
+					x=event.getSceneX();
+					y=event.getSceneY();
+					
+				});
+				
+				root.setOnMouseDragged( event ->{
+					stage.setX(event.getScreenX()-x);
+					stage.setY(event.getScreenY()-y);
+					stage.setOpacity(0.8);
+				});
+				
+				root.setOnMouseReleased(event->{
+					stage.setOpacity(1);
+				});
+				
+				stage.initStyle(StageStyle.TRANSPARENT);
+				
 				Scene scene=new Scene(root);
 				stage.setScene(scene);
 				stage.show();
@@ -99,39 +113,20 @@ public class LoginController  {
 			
 		}else {
 			//show the wrong username/pwd entered 
-			alert=new Alert(AlertType.ERROR);
-			alert.setTitle("Error Message");
-			alert.setHeaderText(null);
-			alert.setContentText("Wrong Username or Password.Please enter correct");
-			alert.showAndWait();
-			
-		}
+			showAlert(AlertType.ERROR, "Error Message", "Wrong Username or Password.Please enter correct");
+		}		
 		
+	}	
+	
+	public void showAlert(AlertType type,String title,String msg) {
 		
+		Alert alert;		
+		alert=new Alert(type);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(msg);
+		alert.showAndWait();
 		
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	}	
 
 }

@@ -1,4 +1,6 @@
 com\desktop\MoSchoolApp\dashboard\dashboardController.class
+com\desktop\MoSchoolApp\database\StudentData.class
 com\desktop\MoSchoolApp\database\DBConnection.class
 com\desktop\MoSchoolApp\login\LoginController.class
+com\desktop\MoSchoolApp\database\CourseData.class
 com\desktop\MoSchoolApp\App.class
